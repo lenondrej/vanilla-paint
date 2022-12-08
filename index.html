@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vanilla JS Paint</title>
+  </head>
+  <body>
+    <nav>
+      <input
+        type="range"
+        min="1"
+        max="100"
+        value="10"
+        name="stroke"
+        id="stroke"
+      />
+      <input type="color" name="color-picker" id="color-picker" />
+    </nav>
+    <canvas id="draw" width="100%" height="100%"></canvas>
+    <script>
+      let color = document.querySelector("#color-picker");
+      let stroke = document.querySelector("#stroke");
+
+      const canvas = document.querySelector("#draw");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx.strokeStyle = "black";
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+
+      let isDrawing = false;
+      let lastX = 0;
+      let lastY = 0;
+
+      color.addEventListener("change", (e) => {
+        return (color = e.target.value);
+      });
+
+      stroke.addEventListener("change", (e) => {
+        return (stroke = e.target.value);
+      });
+
+      console.log(color);
+
+      function draw(e) {
+        if (!isDrawing) {
+          return;
+        }
+        ctx.strokeStyle = `${color}`;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        ctx.lineWidth = stroke;
+        lastX = e.offsetX;
+        lastY = e.offsetY;
+      }
+
+      canvas.addEventListener("mousemove", draw);
+      canvas.addEventListener("mousedown", (e) => {
+        isDrawing = true;
+        lastX = e.offsetX;
+        lastY = e.offsetY;
+      });
+      canvas.addEventListener("mouseup", () => {
+        isDrawing = false;
+      });
+      canvas.addEventListener("mouseout", () => {
+        isDrawing = false;
+      });
+    </script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #draw {
+        cursor: crosshair;
+      }
+    </style>
+  </body>
+</html>
